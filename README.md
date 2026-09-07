@@ -54,13 +54,6 @@ full test suite green, every ablation switch (which objective, which constraints
 
 ## Citation
 
-```bibtex
-@article{trmcbo2026,
-  title   = {TRMC-BO: Target-Range Bayesian Optimization under Multiple Constraints for Materials Formulation},
-  journal = {Digital Discovery},
-  year    = {2026}
-}
-```
 
 ## License
 
