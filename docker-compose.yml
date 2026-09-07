@@ -1,0 +1,15 @@
+services:
+  reproduce:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: trmcbo-reproduce
+    volumes:
+      # Sweeps are resumable (a cell is skipped once its run.json exists), so
+      # results surviving a container restart is the useful default rather
+      # than new infrastructure.
+      - results:/repro/eval/results
+    command: ["status"]
+
+volumes:
+  results:

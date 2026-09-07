@@ -1,0 +1,40 @@
+{
+  "calibration": {
+    "achieved_fraction_of_all": 0.099875,
+    "achieved_fraction_of_feasible": 0.099875,
+    "alpha": 0.3984375,
+    "input_feasible_fraction": 1.0,
+    "marginal_valid_fraction": {
+      "f": 0.099875
+    },
+    "n_input_feasible": 200000,
+    "n_samples": 200000,
+    "native_joint_rate_of_feasible": 0.25066,
+    "rule": "native-threshold-preserved, single-alpha quantile on the satisfying tail",
+    "seed": 20260820,
+    "target_fraction_of_feasible": 0.1,
+    "y_reference_center": {
+      "f": 34.77757187187112
+    },
+    "y_reference_mean": {
+      "f": 54.04707756379889
+    },
+    "y_reference_scale": {
+      "f": 47.57977085632341
+    },
+    "y_reference_std": {
+      "f": 51.158032000027724
+    },
+    "y_valid_centroid": {
+      "f": 12.9236691274297
+    }
+  },
+  "lower": {
+    "f": 9.400668597339306
+  },
+  "task_id": "branin",
+  "upper": {
+    "f": 16.16997607792954
+  },
+  "width_label": "wide"
+}

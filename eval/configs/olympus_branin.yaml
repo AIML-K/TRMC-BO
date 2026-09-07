@@ -1,0 +1,55 @@
+# Olympus analytical protocol -- Branin (paper §5.2).
+#
+# The generalization question this answers: does a method built for materials
+# formulation windows also work on a plain, well-understood BO landscape?
+#
+# Branin is the pick because it has three global minima, so the frozen windows
+# split the valid region into disconnected components -- measured, not assumed,
+# by scripts/valid_region_geometry.py: 4 / 3 / 3 components for wide / medium /
+# narrow (medium is the cleanest: three pieces of comparable size). Recovering
+# diverse designs therefore requires finding several of them, which is exactly
+# what the primary metric counts. And at 2-D the result plots directly, with no
+# PCA projection to explain away.
+#
+# This task is deliberately NOISELESS (observe == truth). Every MatFormBench task
+# is noisy, so one noiseless benchmark separates the acquisition comparison from
+# noise handling. The Range-Aware BO paper uses Branin the same way.
+suite: olympus
+protocol: branin
+
+tasks: [branin]
+widths: [wide, medium, narrow]
+
+# Nine methods. Two registered methods are deliberately absent because they
+# raise on a single-output task rather than degenerating quietly: M8_comboo
+# (constrained *multi*-objective) and the four range_product variants (a product
+# over one factor is that factor).
+methods:
+  - M0_random                    # §6.1 -- calibrates task difficulty
+  - M1_qehvi_extremum            # §6.2 -- C1/C2/C3 off. At m=1 this is qEI, not qEHVI.
+  - M2_target_distance           # §6.3 -- point target at the window midpoint
+  - M3_range_prob                # C1
+  - M4_range_prob_constraints    # C1 + C2
+  - M5_full                      # C1 + C2 + C3
+  - M6_range_aware_tb            # §6.4 -- equal-volume ball
+  - M6b_range_aware_tb_inscribed # §6.4 -- mapping sensitivity check
+  # Single-output only. The ball becomes the window exactly, so this is C1's
+  # objective without C1's improvement hinge -- the plateau isolated at matched
+  # target, surrogate and restart count. See methods/range_aware_tb.MAPPINGS.
+  - M6c_range_aware_tb_box
+  # Trust-region constrained BO (Eriksson & Poloczek 2021), single-output
+  # only -- the complement of M8_comboo's multi-output-only requirement, so
+  # this suite is the one place it can run. The two-sided window becomes a
+  # pair of black-box inequality constraints; see methods/scbo.py.
+  - M7_scbo
+
+n_init: 30
+budget: 50
+q: 1
+
+# Identical to MatFormBench, and for the measured reason recorded there: cutting
+# restarts to 32 runs ~3x faster and leaves the proposed method's hit rate
+# unchanged, but collapses the point-target baseline (0.30 -> 0.00 on L4-1
+# narrow). A win bought by starving a baseline of compute is not a result.
+num_restarts: 128
+n_seeds: 10

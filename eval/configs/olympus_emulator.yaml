@@ -1,0 +1,74 @@
+# Olympus emulator protocol -- real mixture formulation (paper §5.3).
+#
+# Two real mixture problems on a simplex, answered by Olympus's own shipped
+# BayesNeuralNet emulators (extracted to numpy by
+# scripts/extract_olympus_emulator.py and gated by verify_olympus_emulator.py):
+#
+#   pce10       4 components, 1,040 measured polymer blends, degradation
+#   colors_bob  5 components,   241 measured dye mixtures, difference_to_green
+#
+# Two datasets were excluded, for different reasons.
+#
+# photo_wf3 is the same 1,040 blends as pce10 with a different polymer --
+# identical design matrix, responses correlating at r = 0.742 overall and 0.86
+# where they should differ most -- so the pair would not be two pieces of
+# evidence.
+#
+# oer_plate_3496 was selected and then rejected. All four oer_plate datasets mix
+# at most 4 of their 6 components: no measurement has 5 or 6 non-zero loadings.
+# Uniform Dirichlet designs always use every component, so every evaluated point
+# would sit in a stratum the emulator never trained on -- and a convex-hull
+# feasibility test cannot see this, because the hull of those faces is the whole
+# simplex. benchmarks/olympus/data.interior_support and a test now enforce it.
+#
+# colors_bob has all five components non-zero in every measurement, so its
+# interior is genuinely sampled. It also, unlike pce10, exercises input
+# feasibility for real: only 22.6% of uniform draws lie inside its measurement
+# hull, against pce10's 99.89%.
+#
+# The specification windows are CONSTRUCTED: Olympus supplies only
+# "minimize". tau = q25(response) under the uniform measure becomes the cap and
+# the shared calibrator places the lower bound. See specs/olympus/native_targets.json.
+#
+# Input feasibility barely bites here and that is reported, not glossed: pce10's
+# measurement hull covers 99.89%% of its simplex, and oer_plate_3496's hull IS its
+# simplex. Sparse feasibility remains a MatFormBench claim.
+suite: olympus
+protocol: emulator
+
+tasks: [pce10, wf3, thin_film]
+widths: [wide, medium, narrow]
+
+# Nine methods. Two registered methods are deliberately absent because they
+# raise on a single-output task rather than degenerating quietly: M8_comboo
+# (constrained *multi*-objective) and the four range_product variants (a product
+# over one factor is that factor).
+methods:
+  - M0_random                    # §6.1 -- calibrates task difficulty
+  - M1_qehvi_extremum            # §6.2 -- C1/C2/C3 off. At m=1 this is qEI, not qEHVI.
+  - M2_target_distance           # §6.3 -- point target at the window midpoint
+  - M3_range_prob                # C1
+  - M4_range_prob_constraints    # C1 + C2
+  - M5_full                      # C1 + C2 + C3
+  - M6_range_aware_tb            # §6.4 -- equal-volume ball
+  - M6b_range_aware_tb_inscribed # §6.4 -- mapping sensitivity check
+  # Single-output only. The ball becomes the window exactly, so this is C1's
+  # objective without C1's improvement hinge -- the plateau isolated at matched
+  # target, surrogate and restart count. See methods/range_aware_tb.MAPPINGS.
+  - M6c_range_aware_tb_box
+  # Trust-region constrained BO (Eriksson & Poloczek 2021), single-output
+  # only -- the complement of M8_comboo's multi-output-only requirement, so
+  # this suite is the one place it can run. The two-sided window becomes a
+  # pair of black-box inequality constraints; see methods/scbo.py.
+  - M7_scbo
+
+n_init: 30
+budget: 50
+q: 1
+
+# Identical to MatFormBench, and for the measured reason recorded there: cutting
+# restarts to 32 runs ~3x faster and leaves the proposed method's hit rate
+# unchanged, but collapses the point-target baseline (0.30 -> 0.00 on L4-1
+# narrow). A win bought by starving a baseline of compute is not a result.
+num_restarts: 128
+n_seeds: 10

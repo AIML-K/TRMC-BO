@@ -1,0 +1,60 @@
+# Does the §4.2 acquisition, implemented as written, behave better than the
+# shipped one? (audit item B)
+#
+# The paper specifies A_range(x) = prod_k P(L_k <= f_k(x) <= U_k). The shipped
+# multi-output path hands a *vector* of per-output probabilities to qEHVI
+# instead, which rewards spread along a Pareto front rather than the joint
+# condition the task actually imposes. `scripts/acquisition_auc.py` measured the
+# consequence over 15 settings x 5 seeds: the shipped form ranks candidates at
+# AUC 0.542, barely above the 0.5 of shuffling the pool, while the product
+# reaches 0.641 and the point-target baseline -- whose objective is also joint --
+# reaches 0.608. This sweep asks whether that ranking difference survives into
+# campaign performance, which a one-step diagnostic cannot answer.
+# STOPPED AT 44 OF 300 CELLS, deliberately. The question was answered before the
+# matrix finished: the direct-product variants collapse onto one basin whether or
+# not C2/C3 are on, in the same direction on all three geometries tested (L1-1 5D
+# box 14->13 distinct for the shipped path against 11->2 for the product; L4-1 10D
+# simplex 8->8 against 27->1; L5-4 15D every product proposal unmanufacturable).
+# Those two variants were also ~69 of the ~75 remaining CPU-hours. Re-running this
+# config resumes from cell 45 -- completed cells are skipped.
+#
+# If picking this up: the variant still worth the full matrix is M5q
+# (product wrapped in qEI, C2/C3 on). It beats the shipped path on distinct
+# designs at equal cost, because the qEI plateau prevents the acquisition from
+# pulling toward a single point. Restricting `methods:` to that one row is 75
+# cells and about 10 CPU-hours.
+suite: matformbench
+protocol: range_adapted
+
+# Same tasks and widths as the main sweep, so rows line up cell for cell.
+tasks: [L1-1, L2-1, L3-1, L4-1, L5-4]
+widths: [wide, medium, narrow]
+
+# Only the new variants. M3_range_prob and M5_full already have seeds 0-9 from
+# the main sweep and are read from there rather than recomputed -- rerunning them
+# would burn two hours to reproduce numbers we have.
+#
+# The C1-only pair is the comparison that can attribute a difference to the
+# aggregation. With C2 and C3 on, three different acquisitions were observed
+# proposing the same point to within 1e-4 for three straight iterations, because
+# the two-sided mean constraints leave almost no admissible volume; the full
+# pair is still run to answer the separate question of what the shipped
+# configuration would do differently.
+methods:
+  - M3p_range_prob_product       # product, direct       (C1 only)
+  - M3q_range_prob_product_ei    # product, wrapped qEI  (C1 only)
+  - M5p_full_product             # product, direct       (C1+C2+C3)
+  - M5q_full_product_ei          # product, wrapped qEI  (C1+C2+C3)
+
+# Identical to the main sweep. Any deviation here would make the comparison
+# against the existing M3/M5 cells meaningless.
+n_init: 30
+budget: 50
+q: 1
+num_restarts: 128
+
+# 5 rather than 10: this is a diagnostic against cells that already exist at
+# these seeds, and half the seeds is enough to see a difference of the size the
+# AUC gap implies. If it turns out marginal, the remaining seeds are one resumed
+# run away.
+n_seeds: 5

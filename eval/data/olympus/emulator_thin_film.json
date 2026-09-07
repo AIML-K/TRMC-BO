@@ -1,0 +1,33 @@
+{
+  "batch_size": 70,
+  "bias_posterior": "singular (point mass at loc)",
+  "dataset": "thin_film",
+  "feature_transform": [
+    "identity"
+  ],
+  "hidden_act": "leaky_relu",
+  "hidden_depth": 4,
+  "hidden_nodes": 40,
+  "leaky_relu_alpha": 0.2,
+  "model": "BayesNeuralNet (tfp DenseLocalReparameterization stack)",
+  "n_layers": 5,
+  "obs_scale_softplus_range": [
+    0.18462810899022403,
+    0.2164833767851209
+  ],
+  "obs_scale_untransformed": "recorded for provenance; batch-position-indexed upstream, unused here",
+  "out_act": "relu",
+  "published_scores": {
+    "train_r2": 0.9037551361405565,
+    "train_rmsd": 0.19542678064753582,
+    "validation_r2": 0.9685599531640334,
+    "validation_rmsd": 0.22145761697549693
+  },
+  "published_scores_protocol": "num_samples=10 averaged stochastic passes, scored in scaled target space (before back_transform)",
+  "softplus_eps": 1.1920928955078125e-07,
+  "source": "aspuru-guzik-group/olympus, shipped BayesNeuralNet emulator",
+  "target_transform": [
+    "mean"
+  ],
+  "task": "regression"
+}

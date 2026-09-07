@@ -1,0 +1,33 @@
+# The C1-off half of the C1/C2/C3 factorial, on the Olympus analytical protocol.
+#
+# Companion to factorial_matformbench.yaml; the rationale for the four cells is
+# recorded there and is not repeated. What this suite adds is the single-output
+# case, and that is the one the paper's claim (ii) turns on.
+#
+# Claim (ii) derives that C1's acquisition saturates to identically zero on
+# single-output problems, and concludes the gain is C2's and C3's. The ladder
+# supports that only by elimination -- it has no cell where C1 is off. M14/M15/M16
+# supply it directly: if the conclusion is right, M16 should land near M5_full
+# here, and the same comparison on the multi-output suite should NOT, because the
+# derivation does not apply there.
+#
+# At one output the extremum acquisition is qEI rather than qEHVI, and the mean
+# constraints number two rather than six. Both are properties of the task; see
+# eval/scripts/verify_variants.py --suite olympus.
+suite: olympus
+protocol: branin
+
+tasks: [branin]
+widths: [wide, medium, narrow]
+
+methods:
+  - M13_range_prob_starts
+  - M14_constraints_only
+  - M15_starts_only
+  - M16_constraints_starts
+
+n_init: 30
+budget: 50
+q: 1
+num_restarts: 128
+n_seeds: 10

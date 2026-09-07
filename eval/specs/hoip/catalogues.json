@@ -1,0 +1,164 @@
+{
+  "campaign_size": 80,
+  "coverage_ceiling": {
+    "dense": 0.3333333333333333,
+    "restricted": 0.2
+  },
+  "nested": true,
+  "tasks": {
+    "dense": {
+      "campaign_coverage": 0.3333333333333333,
+      "feasible_rate": 0.4,
+      "halogens": [
+        "Cl",
+        "Br",
+        "I"
+      ],
+      "infeasible_rate": 0.6,
+      "metals": [
+        "Be",
+        "Mg",
+        "Ca",
+        "Sr",
+        "Mn",
+        "Fe",
+        "Co",
+        "Au",
+        "Zn",
+        "Cd",
+        "Hg",
+        "In",
+        "Tl",
+        "Ge",
+        "Sn",
+        "Pb"
+      ],
+      "molcats": [
+        "H3S",
+        "NH4",
+        "MP",
+        "G",
+        "tBA"
+      ],
+      "n_feasible": 96,
+      "n_materials": 240,
+      "n_valid": 7,
+      "rule": "highest feasible rate among molcat x metal x halogen rectangles that contain all 7 valid materials and have campaign coverage <= 0.333 (80 evaluations, so n >= 240)",
+      "valid_share_of_feasible": 0.07291666666666667,
+      "valid_share_of_space": 0.029166666666666667
+    },
+    "full": {
+      "campaign_coverage": 0.06269592476489028,
+      "feasible_rate": 0.08699059561128526,
+      "halogens": [
+        "F",
+        "Cl",
+        "Br",
+        "I"
+      ],
+      "infeasible_rate": 0.9130094043887147,
+      "metals": [
+        "Be",
+        "Mg",
+        "Ca",
+        "Sr",
+        "Ba",
+        "Cr",
+        "Mn",
+        "Fe",
+        "Co",
+        "Ni",
+        "Pd",
+        "Pt",
+        "Cu",
+        "Ag",
+        "Au",
+        "Zn",
+        "Cd",
+        "Hg",
+        "Ga",
+        "In",
+        "Tl",
+        "Si",
+        "Ge",
+        "Sn",
+        "Pb",
+        "Bi",
+        "S",
+        "Se",
+        "Te"
+      ],
+      "molcats": [
+        "H3S",
+        "NH4",
+        "MS",
+        "MA",
+        "MP",
+        "FA",
+        "EA",
+        "G",
+        "AA",
+        "ED",
+        "tBA"
+      ],
+      "n_feasible": 111,
+      "n_materials": 1276,
+      "n_valid": 7,
+      "valid_share_of_feasible": 0.06306306306306306,
+      "valid_share_of_space": 0.0054858934169279
+    },
+    "restricted": {
+      "campaign_coverage": 0.19607843137254902,
+      "feasible_rate": 0.2647058823529412,
+      "halogens": [
+        "F",
+        "Cl",
+        "Br",
+        "I"
+      ],
+      "infeasible_rate": 0.7352941176470589,
+      "metals": [
+        "Be",
+        "Mg",
+        "Ca",
+        "Sr",
+        "Mn",
+        "Fe",
+        "Co",
+        "Au",
+        "Zn",
+        "Cd",
+        "Hg",
+        "In",
+        "Tl",
+        "Ge",
+        "Sn",
+        "Pb",
+        "Te"
+      ],
+      "molcats": [
+        "H3S",
+        "NH4",
+        "MS",
+        "MP",
+        "G",
+        "tBA"
+      ],
+      "n_feasible": 108,
+      "n_materials": 408,
+      "n_valid": 7,
+      "rule": "highest feasible rate among molcat x metal x halogen rectangles that contain all 7 valid materials and have campaign coverage <= 0.200 (80 evaluations, so n >= 400)",
+      "valid_share_of_feasible": 0.06481481481481481,
+      "valid_share_of_space": 0.01715686274509804
+    }
+  },
+  "valid_materials": [
+    "H3S/Cd/I",
+    "H3S/Ge/Br",
+    "MP/Sn/Br",
+    "NH4/In/Br",
+    "NH4/Pb/I",
+    "NH4/Sn/I",
+    "NH4/Tl/Cl"
+  ]
+}

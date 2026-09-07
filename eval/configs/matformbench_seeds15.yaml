@@ -1,0 +1,44 @@
+# Seed extension for the core comparison: 10 -> 15.
+#
+# Why a separate file. `matformbench_range_adapted.yaml` records why 10 seeds
+# were chosen (measured ~25 h at 20) and now also carries the three C4 variants,
+# which are at 10. Raising n_seeds there would extend those too and rewrite a
+# comment that describes a decision actually taken. This file extends only the
+# core comparison, and `aggregate.seed_bootstrap_ci` flags a ragged matrix rather
+# than averaging across unequal seed counts, so the two groups stay separable.
+#
+# Why 15 and not 20. Each stage has to leave every cell at the same seed count --
+# a table that averages 20-seed cells against 10-seed cells is mixing two
+# estimators. 15 first, then a second stage to 20 if it is worth it.
+#
+# Whether it is worth it is an open question the intervals already speak to. At
+# 10 seeds the 95% bootstrap intervals on the branin headline are
+# [11.73, 12.60] for the full method, [8.57, 9.80] for point-target,
+# [4.80, 5.57] for SCBO and [1.43, 2.20] for the tolerance ball -- disjoint by
+# margins far larger than their widths. The extension buys resolution on the
+# per-(task, width) tables, not on the headline.
+suite: matformbench
+protocol: range_adapted
+
+tasks: [L1-1, L2-1, L3-1, L4-1, L5-4]
+widths: [wide, medium, narrow]
+
+# The core comparison only. C4 (M10-M12) and the product variants stay at their
+# own seed counts and are reported in their own sections.
+methods:
+  - M0_random
+  - M1_qehvi_extremum
+  - M2_target_distance
+  - M3_range_prob
+  - M4_range_prob_constraints
+  - M5_full
+  - M6_range_aware_tb
+  - M6b_range_aware_tb_inscribed
+
+# Identical to the main sweep in every other respect; a deviation would make the
+# new seeds incomparable to the existing ones.
+n_init: 30
+budget: 50
+q: 1
+num_restarts: 128
+n_seeds: 15

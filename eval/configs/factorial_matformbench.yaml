@@ -1,0 +1,48 @@
+# The C1-off half of the C1/C2/C3 factorial, on the range-adapted MatFormBench
+# protocol.
+#
+# Why this sweep exists. The ablation reported in the paper is a cumulative
+# ladder -- C1, then C1+C2, then C1+C2+C3 -- and a cumulative ladder cannot
+# distinguish "C2 and C3 amplify the range objective" from "C2 and C3 do the work
+# and C1 contributes nothing". Those are different papers. The four cells here
+# complete the 2x2x2 factorial so the question is answerable rather than argued:
+#
+#      M13  C1 + C3        C3 without C2 -- does the restart filter add anything
+#                          the hard constraint does not already supply?
+#      M14  C2 only        the window reaches the optimizer, never the acquisition
+#      M15  C3 only        the sharpest test of the "C3 is just mean-based
+#                          exploitation" reading: with no range signal in the
+#                          acquisition at all, anything C3 recovers is C3's
+#      M16  C2 + C3        the C1-off counterpart of M5_full. The gap between
+#                          this and M5_full is C1's contribution on a
+#                          MULTI-output problem, where the single-output
+#                          saturation derivation does not apply.
+#
+# Writes into the same suite/protocol tree as the main sweep, so aggregation
+# picks these up beside the existing rows and resume never re-runs a completed
+# cell.
+#
+# Switching C1 off without silently switching C2/C3 off with it is not a flag
+# flip -- see eval/methods/factorial.py for the two traps and
+# eval/scripts/verify_variants.py for the check that both stayed shut. Run that
+# check before this sweep, not after.
+suite: matformbench
+protocol: range_adapted
+
+tasks: [L1-1, L2-1, L3-1, L4-1, L5-4]
+widths: [wide, medium, narrow]
+
+methods:
+  - M13_range_prob_starts
+  - M14_constraints_only
+  - M15_starts_only
+  - M16_constraints_starts
+
+n_init: 30
+budget: 50
+q: 1
+# Identical to every other method on this protocol. These arms are compared
+# against M1/M3/M4/M5 cell for cell, so any difference in restart budget would
+# show up as a component effect.
+num_restarts: 128
+n_seeds: 10

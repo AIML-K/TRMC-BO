@@ -1,0 +1,102 @@
+# HOIP catalogue protocol -- real inverse design under unknown input feasibility.
+#
+# The perovskite application of *Anubis: Bayesian optimization with unknown
+# feasibility constraints for scientific experimentation*: 11 molecular cations x
+# 29 metals x 4 halogens, with the oracle a lookup in the near-hull DFT table
+# upstream ships. A composition absent from that table is not manufacturable.
+#
+# WHAT THIS SUITE IS FOR
+#
+# Across 2,424 completed cells on the other two suites, TRMC-BO leads on distinct
+# qualifying designs at 24% and 41% infeasible and *reverses* at 69% -- measured on
+# one task, L5-4, with nothing else in the world testing it. Olympus cannot
+# strengthen it: its three usable mixture tasks are 99.8-100% feasible. So the
+# three tasks here are not three problems, they are one design space at three
+# levels of infeasibility, chosen to bracket that crossing:
+#
+#   dense       240 materials   60.0% infeasible   coverage 33.3%
+#   restricted  408 materials   73.5% infeasible   coverage 19.6%
+#   full      1,276 materials   91.3% infeasible   coverage  6.3%
+#
+# Every rectangle the selection rule considered had to contain all seven valid
+# materials, so the valid set is *identical* across the three and the ceiling on
+# the primary metric does not move along the axis. Valid share among feasible
+# designs: 7.3% / 6.5% / 6.3%. See scripts/freeze_hoip_catalogues.py; the ladder
+# was frozen before any method ran.
+#
+# Report `feasible_rate` per method against M0_random, per task. That column is
+# the reason this suite exists -- C1, C2 and C3 all aim at the outcome window and
+# supply no signal on the manufacturability axis.
+#
+# ONE CONDITION, NOT THREE WIDTHS
+#
+# HOIP supplies its own two-sided window (0.75 <= Eg <= 1.75, m* <= 4) -- the only
+# benchmark-supplied specification in the paper. Window width is what the other two
+# suites vary; here the difficulty axis is input feasibility instead.
+suite: hoip
+protocol: catalogue
+
+tasks: [dense, restricted, full]
+widths: [native]
+
+# Thirteen methods: the multi-output set. One registered method is absent because
+# it would raise rather than degenerate quietly -- M6c_range_aware_tb_box is
+# single-output only. M8_comboo is now included: its box-to-COMBOO mapping bug
+# (hypervolume reference tied to the constraint threshold) is fixed in
+# `eval/methods/comboo.py` ("Mapping fix" section of its module docstring), and
+# HOIP has no simplex/equality constraint to trigger the feasibility-probe cost
+# blowup that kept M8_comboo off MatFormBench's L4-1/L5-4 -- its 14 continuous
+# descriptor dims are a plain box, so it should cost about what any other
+# multi-output method costs here.
+methods:
+  - M0_random                     # calibrates task difficulty AND the feasibility floor
+  - M1_qehvi_extremum             # C1/C2/C3 off. Reads the window's upper bounds only.
+  - M2_target_distance            # point target at the window midpoint == upstream's
+                                  #   folded abs(gap - 1.25) objective
+  - M3_range_prob                 # C1
+  - M4_range_prob_constraints     # C1 + C2
+  - M5_full                       # C1 + C2 + C3
+  - M6_range_aware_tb             # equal-volume ball
+  - M6b_range_aware_tb_inscribed  # mapping sensitivity check
+  # C4 -- the same feasibility classifier M9_anubis uses, grafted onto the
+  # proposed method instead of replacing it. C4a reweights the candidate
+  # ranking by P(feasible|x); C4b additionally filters restarts by it. Split
+  # because they can disagree: C4b competes with C3 for the same restart pool
+  # (which already starves here), C4a costs it nothing.
+  - M10_full_feasw                # C1 + C2 + C3 + C4a
+  - M11_full_feasf                # C1 + C2 + C3 + C4b
+  - M12_full_feas                 # C1 + C2 + C3 + C4a + C4b
+  # The §4.2 product aggregation. On MatFormBench the product raised hit rate and
+  # collapsed 27 qualifying evaluations into 1 distinct design; that finding rests
+  # on one suite, and HOIP is the only other multi-output one.
+  - M3p_range_prob_product
+  - M3q_range_prob_product_ei
+  - M5p_full_product
+  - M5q_full_product_ei
+  # §6.5 general constrained BO baseline (backbone's argument that constrained BO
+  # subordinates range satisfaction to a separate objective) -- the direct
+  # counterpart to compare against this suite's own negative TRMC-BO finding.
+  - M8_comboo
+  # Anubis (Hickman et al. 2025) -- the algorithm behind this suite's own
+  # source paper, not just its benchmark task. Feasibility-classifier-weighted
+  # acquisition, the mechanism this suite's own negative finding argues is
+  # missing from TRMC-BO (m_star unlearnable -> C3's in-band filter starves
+  # into random-fallback). Reports whether an explicit unknown-feasibility
+  # model does better here than TRMC-BO does, not only than random search.
+  - M9_anubis
+
+# Matching both finished suites, so the three are comparable. n_init + budget = 80
+# oracle calls, which is what the catalogue selection rule bounded coverage
+# against. On `full` about 9% of the catalogue is feasible, so 30 draws label
+# roughly 3 materials and the loop's min_labeled extension often fires -- coping
+# with that is the sparse-feasibility task, exactly as on MatFormBench L5-4.
+n_init: 30
+budget: 50
+q: 1
+
+# 128 for the measured reason recorded in the other configs: cutting it to 32 runs
+# ~3x faster and leaves TRMC-BO's hit rate unchanged, but collapses the
+# point-target baseline (0.30 -> 0.00 on L4-1 narrow). A win bought by starving a
+# baseline of compute is not a result.
+num_restarts: 128
+n_seeds: 10

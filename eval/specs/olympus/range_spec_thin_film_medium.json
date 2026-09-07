@@ -1,0 +1,40 @@
+{
+  "calibration": {
+    "achieved_fraction_of_all": 0.030275,
+    "achieved_fraction_of_feasible": 0.030275,
+    "alpha": 0.12109375,
+    "input_feasible_fraction": 1.0,
+    "marginal_valid_fraction": {
+      "instability_index": 0.030275
+    },
+    "n_input_feasible": 200000,
+    "n_samples": 200000,
+    "native_joint_rate_of_feasible": 0.24999,
+    "rule": "native-threshold-preserved, single-alpha quantile on the satisfying tail",
+    "seed": 20260820,
+    "target_fraction_of_feasible": 0.03,
+    "y_reference_center": {
+      "instability_index": 641992.4792502817
+    },
+    "y_reference_mean": {
+      "instability_index": 653629.7948700179
+    },
+    "y_reference_scale": {
+      "instability_index": 359729.608133181
+    },
+    "y_reference_std": {
+      "instability_index": 313540.2244916647
+    },
+    "y_valid_centroid": {
+      "instability_index": 401409.6035715163
+    }
+  },
+  "lower": {
+    "instability_index": 387253.9742680054
+  },
+  "task_id": "thin_film",
+  "upper": {
+    "instability_index": 408344.7692691164
+  },
+  "width_label": "medium"
+}

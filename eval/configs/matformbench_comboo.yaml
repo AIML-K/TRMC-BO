@@ -1,0 +1,58 @@
+# COMBOO baseline on the range-adapted MatFormBench protocol (backbone §6.5).
+#
+# Deliberately a separate config containing only COMBOO. It writes into the same
+# suite/protocol tree as the main sweep, so aggregation picks it up alongside the
+# other methods with no extra work, and resume keeps it from touching cells that
+# already exist.
+#
+# DEFERRED -- results withheld, see eval/methods/comboo.py.
+#
+# RESTRICTED TO THE 5D TASKS. Measured per-cell cost at the sweep's 128 restarts:
+#
+#      L1-1, L2-1    0.4 min   (exits at the feasibility probe)
+#      L3-1          5-7 min
+#      L4-1          >9.5 h and did not finish   <- 10D simplex, stopped
+#      L5-4          never reached, 15D simplex
+#
+# COMBOO runs a full 128-restart auxiliary feasibility probe *in addition to* the
+# constrained solve, every iteration. On the simplex tasks that combines with an
+# equality constraint, 6 component floors and 6 nonlinear constraints, and the
+# cost becomes prohibitive. The 5D results (90 cells, complete) are reported and
+# the simplex tasks are recorded as not run -- computational cost is itself a
+# reportable property of the baseline rather than something to hide.
+#
+# To retry the simplex tasks later, add L4-1 and L5-4 back to `tasks:` and budget
+# days, not hours. Do NOT reduce num_restarts to make it fit: the probe's optimum
+# is razor-thin (+0.03 on L1-1/medium) and a thinner restart set fabricates
+# infeasibility declarations the method never made.
+#
+# Interpretation note. COMBOO declares infeasibility and stops on L1-1 from
+#      iteration 2 onward. That is its own defined behaviour -- their loop breaks
+#      and their paper reports the fraction of completed runs -- so the
+#      declaration rate is a first-class number, not a defect. But the mechanism
+#      here is specific: y2's batch-effect noise (~25) is the size of its own
+#      standard deviation (~26), so the y2 GP is uninformative, its optimistic
+#      bound never clears the data mean, and once y2's running mean drifts past
+#      the cap the probe can never succeed again. Verified not to be a porting
+#      artifact: the acquisition optimum matches a 20k-point brute-force search
+#      to four decimals at every iteration, and the algorithm reproduces the
+#      authors' own branin-currin results (3 seeds x 30 iterations, zero
+#      declarations, hypervolume 0 -> ~62).
+suite: matformbench
+protocol: range_adapted
+
+# 5D tasks only -- see the cost note above.
+tasks: [L1-1, L2-1, L3-1]
+widths: [wide, medium, narrow]
+
+methods:
+  - M8_comboo
+
+n_init: 30
+budget: 50
+q: 1
+# Same restart budget as every other method, or the comparison would measure
+# compute rather than algorithm. The probe gets the full budget too, since
+# under-resourcing a feasibility test fabricates declarations.
+num_restarts: 128
+n_seeds: 10

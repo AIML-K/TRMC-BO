@@ -1,0 +1,23 @@
+# The C1-off half of the C1/C2/C3 factorial, on the Olympus emulator protocol.
+#
+# Same four cells as factorial_olympus.yaml -- see that file for the rationale --
+# on the three measured polymer-blend and thin-film mixtures rather than the
+# analytical surface. Kept as its own config because the two protocols write to
+# different trees and are resumed independently.
+suite: olympus
+protocol: emulator
+
+tasks: [pce10, wf3, thin_film]
+widths: [wide, medium, narrow]
+
+methods:
+  - M13_range_prob_starts
+  - M14_constraints_only
+  - M15_starts_only
+  - M16_constraints_starts
+
+n_init: 30
+budget: 50
+q: 1
+num_restarts: 128
+n_seeds: 10

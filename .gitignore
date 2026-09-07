@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+.venv-eval/
+.venv-olympus/
+.venv-build/
+
+eval/external/
+eval/results/
+
+paper/figures/
+paper/sections/tables/

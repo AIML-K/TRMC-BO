@@ -1,0 +1,56 @@
+{
+  "calibration": {
+    "achieved_fraction_of_all": 0.009869999999999999,
+    "achieved_fraction_of_feasible": 0.03038231853721603,
+    "alpha": 0.34375,
+    "input_feasible_fraction": 0.32486,
+    "marginal_valid_fraction": {
+      "y1": 0.13725912700855752,
+      "y2": 0.30987194483777625,
+      "y3": 0.3259404050975805
+    },
+    "n_input_feasible": 64972,
+    "n_samples": 200000,
+    "native_joint_rate_of_feasible": 0.3138428861663486,
+    "rule": "native-threshold-preserved, single-alpha quantile on the satisfying tail",
+    "seed": 20260820,
+    "target_fraction_of_feasible": 0.03,
+    "y_reference_center": {
+      "y1": 61.21730497018804,
+      "y2": 269.74490786874856,
+      "y3": 6.307759487525598
+    },
+    "y_reference_mean": {
+      "y1": 61.164219663561866,
+      "y2": 318.9176926580884,
+      "y3": 6.2997182459133265
+    },
+    "y_reference_scale": {
+      "y1": 3.084578285148094,
+      "y2": 12.521336381351487,
+      "y3": 0.3140705361418517
+    },
+    "y_reference_std": {
+      "y1": 3.0521687823012758,
+      "y2": 5723.210378529413,
+      "y3": 0.3127963331559569
+    },
+    "y_valid_centroid": {
+      "y1": 62.544437499830465,
+      "y2": 277.00639891052435,
+      "y3": 6.579942459030172
+    }
+  },
+  "lower": {
+    "y1": 62.0,
+    "y2": 272.691832458502,
+    "y3": 6.404247874380913
+  },
+  "task_id": "L5-4",
+  "upper": {
+    "y1": 63.15037468225963,
+    "y2": 305.0,
+    "y3": 6.8
+  },
+  "width_label": "medium"
+}

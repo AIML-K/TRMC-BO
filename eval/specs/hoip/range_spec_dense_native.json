@@ -1,0 +1,52 @@
+{
+  "calibration": {
+    "achieved_fraction_of_all": 0.029166666666666667,
+    "achieved_fraction_of_feasible": 0.07291666666666667,
+    "alpha": null,
+    "constructed": false,
+    "exact_enumeration": true,
+    "input_feasible_fraction": 0.4,
+    "marginal_valid_fraction": {
+      "bandgap": 0.125,
+      "m_star": 0.7708333333333334
+    },
+    "n_censored_m_star": 2,
+    "n_input_feasible": 96,
+    "n_samples": 240,
+    "n_valid": 7,
+    "native_joint_rate_of_feasible": 0.09375,
+    "rule": "benchmark-supplied window, not calibrated: upstream's success test abs(bandgap - 1.25) < 0.5 and m_star < 4. m_star's lower bound is the physical floor 0, not a fitted quantile.",
+    "seed": null,
+    "target_fraction_of_feasible": null,
+    "y_reference_center": {
+      "bandgap": 2.865,
+      "m_star": 0.96
+    },
+    "y_reference_mean": {
+      "bandgap": 2.7687500000000003,
+      "m_star": 6.6642553191489355
+    },
+    "y_reference_scale": {
+      "bandgap": 1.2713120830244629,
+      "m_star": 2.1219421793921427
+    },
+    "y_reference_std": {
+      "bandgap": 1.30862781983012,
+      "m_star": 16.58283151458746
+    },
+    "y_valid_centroid": {
+      "bandgap": 1.53,
+      "m_star": 1.07
+    }
+  },
+  "lower": {
+    "bandgap": 0.75,
+    "m_star": 0.0
+  },
+  "task_id": "dense",
+  "upper": {
+    "bandgap": 1.75,
+    "m_star": 4.0
+  },
+  "width_label": "native"
+}

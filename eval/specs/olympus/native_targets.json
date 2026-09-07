@@ -1,0 +1,71 @@
+{
+  "rule": "tau at the q25 tail of the response (q25 for minimize, q75 for maximize) over a uniform sample of input-feasible designs; the specification is CONSTRUCTED, not supplied by Olympus",
+  "tasks": {
+    "branin": {
+      "fraction_satisfying_native": 0.25,
+      "goal": "minimize",
+      "input_feasible_fraction": 1.0,
+      "n_input_feasible": 200000,
+      "n_samples": 200000,
+      "quantile": 0.25,
+      "response_max": 306.23438020380706,
+      "response_median": 34.973256521199446,
+      "response_min": 0.3980219195097856,
+      "seed": 20260821,
+      "tau": 16.16997607792954
+    },
+    "p3ht": {
+      "fraction_satisfying_native": 1.0,
+      "goal": "maximize",
+      "input_feasible_fraction": 0.296895,
+      "n_input_feasible": 59379,
+      "n_samples": 200000,
+      "quantile": 0.75,
+      "response_max": 694.2393367754106,
+      "response_median": 0.0,
+      "response_min": 0.0,
+      "seed": 20260821,
+      "tau": 0.0
+    },
+    "pce10": {
+      "fraction_satisfying_native": 0.2500025024774527,
+      "goal": "minimize",
+      "input_feasible_fraction": 0.99901,
+      "n_input_feasible": 199802,
+      "n_samples": 200000,
+      "quantile": 0.25,
+      "response_max": 0.7045178236142556,
+      "response_median": 0.1504676000102115,
+      "response_min": 0.006375398258324827,
+      "seed": 20260821,
+      "tau": 0.11814882642098548
+    },
+    "thin_film": {
+      "fraction_satisfying_native": 0.25,
+      "goal": "minimize",
+      "input_feasible_fraction": 1.0,
+      "n_input_feasible": 200000,
+      "n_samples": 200000,
+      "quantile": 0.25,
+      "response_max": 1586902.9046880007,
+      "response_median": 643122.3093449605,
+      "response_min": 88769.7918952303,
+      "seed": 20260821,
+      "tau": 408344.7692691164
+    },
+    "wf3": {
+      "fraction_satisfying_native": 0.2500025024774527,
+      "goal": "minimize",
+      "input_feasible_fraction": 0.99901,
+      "n_input_feasible": 199802,
+      "n_samples": 200000,
+      "quantile": 0.25,
+      "response_max": 0.7069459255801605,
+      "response_median": 0.16393499918205456,
+      "response_min": 0.0,
+      "seed": 20260821,
+      "tau": 0.11614151285163246
+    }
+  },
+  "why_q25": "With one output the calibration is analytic: valid fraction = P(native) * alpha. Placing tau at the target quantile would force alpha=1 for the widest condition, collapsing its lower bound onto the sample minimum and making it one-sided. q25 gives alpha ~ 0.40/0.12/0.04."
+}

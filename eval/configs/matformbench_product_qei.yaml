@@ -1,0 +1,46 @@
+# The one product variant still worth the full matrix, at full seed count.
+#
+# `matformbench_product.yaml` is the record of a sweep deliberately stopped at 44
+# of 300 cells: the two *direct* product variants (M3p/M5p) collapse onto a single
+# basin regardless of C2/C3, and they were ~69 of the ~75 remaining CPU-hours.
+# That file is left as it stands so its comment block still describes the cells it
+# actually produced.
+#
+# What it could not answer is the qEI-wrapped pair. Wrapping the product in qEI
+# introduces a plateau -- every candidate below the incumbent ties at exactly 0 --
+# which stops the acquisition pulling toward one point and hands the work to C2/C3
+# and the restarts. On L1-1 (wide+medium, 5 seeds) M5q reached 10.00 distinct
+# designs against the shipped path's 8.80 at equal cost (7.4 vs 7.5 s/iter). One
+# task is not enough to change what the paper specifies as its own acquisition.
+#
+# Separate config rather than an edit, for two reasons:
+#
+# * `n_seeds` is 10 here, not 5. This comparison decides which acquisition §4.2
+#   specifies, which is too load-bearing to settle on half the seeds -- and the
+#   measured seed CV on this suite is ~0.5. Raising `n_seeds` in the other file
+#   would also misdescribe the 44 cells it already produced.
+# * Restricting `methods` there would erase the record of which variants were
+#   dropped and why.
+#
+# M3q is included so the aggregation effect can be separated from its interaction
+# with C2/C3: M3q vs M3_range_prob isolates the acquisition, M5q vs M5_full asks
+# what the shipped configuration would do differently. Both baselines already have
+# seeds 0-9 from the main sweep and are read from there.
+suite: matformbench
+protocol: range_adapted
+
+# Identical to the main sweep so rows line up cell for cell.
+tasks: [L1-1, L2-1, L3-1, L4-1, L5-4]
+widths: [wide, medium, narrow]
+
+methods:
+  - M3q_range_prob_product_ei    # product, wrapped in qEI  (C1 only)
+  - M5q_full_product_ei          # product, wrapped in qEI  (C1+C2+C3)
+
+# Identical to the main sweep. Any deviation makes the comparison against the
+# existing M3/M5 cells meaningless.
+n_init: 30
+budget: 50
+q: 1
+num_restarts: 128
+n_seeds: 10

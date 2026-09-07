@@ -1,0 +1,54 @@
+# Range-adapted MatFormBench sweep (backbone §5.1, §7.1).
+#
+# Target windows are NOT defined here -- they are frozen under
+# eval/specs/matformbench/ by scripts/calibrate_ranges.py and read by task id
+# and width. Every method and seed therefore optimizes byte-identical targets.
+suite: matformbench
+protocol: range_adapted
+
+# L1-L3 held at 5D so only the structural difficulty changes; L4/L5 escalate
+# dimension and carry the 6-component simplex.
+tasks: [L1-1, L2-1, L3-1, L4-1, L5-4]
+widths: [wide, medium, narrow]
+
+methods:
+  - M0_random                    # §6.1 -- calibrates task difficulty
+  - M1_qehvi_extremum            # §6.2 -- C1/C2/C3 all off
+  - M2_target_distance           # §6.3 -- point target at the window midpoint
+  - M3_range_prob                # C1
+  - M4_range_prob_constraints    # C1 + C2
+  - M5_full                      # C1 + C2 + C3
+  - M6_range_aware_tb            # §6.4 -- equal-volume ball
+  - M6b_range_aware_tb_inscribed # §6.4 -- mapping sensitivity check
+  # C4 -- the same feasibility classifier M9_anubis uses, grafted onto the
+  # proposed method instead of replacing it. C4a reweights the candidate
+  # ranking by P(feasible|x); C4b additionally filters restarts by it. Split
+  # because they can disagree: C4b competes with C3 for the same restart pool
+  # (which already starves here), C4a costs it nothing.
+  - M10_full_feasw               # C1 + C2 + C3 + C4a
+  - M11_full_feasf               # C1 + C2 + C3 + C4b
+  - M12_full_feas                # C1 + C2 + C3 + C4a + C4b
+
+# 30 initial draws matches MatFormBench's own generate_and_export(n=30);
+# infeasible draws keep their NaN response rather than being replaced.
+n_init: 30
+# 50 sequential evaluations, as in the Range-Aware BO paper's benchmark suite,
+# so our numbers stay comparable to theirs.
+budget: 50
+q: 1
+
+# Multi-start points for the acquisition optimizer, identical for every method.
+#
+# Kept at the production default of 128 even though restart count dominates cost
+# and cutting it to 32 would run ~3x faster. Measured on L1-1/medium and
+# L4-1/narrow: the proposed method's hit rate is unchanged at 128/32/16, while
+# the point-target baseline degrades badly -- on L4-1/narrow from 0.30 to 0.00,
+# i.e. it stops finding anything at all. Reducing restarts would therefore make
+# the proposed method look better by starving a baseline of compute, which is
+# not a result.
+num_restarts: 128
+
+# Reduced from 20 after measuring true cost (~25 h at 20 seeds). Seeds are the
+# one axis that can be cut without distorting the comparison: it applies equally
+# to every method and costs only statistical power, unlike restart count.
+n_seeds: 10

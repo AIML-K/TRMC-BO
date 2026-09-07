@@ -1,0 +1,33 @@
+{
+  "batch_size": 20,
+  "bias_posterior": "singular (point mass at loc)",
+  "dataset": "colors_bob",
+  "feature_transform": [
+    "identity"
+  ],
+  "hidden_act": "linear",
+  "hidden_depth": 3,
+  "hidden_nodes": 48,
+  "leaky_relu_alpha": 0.2,
+  "model": "BayesNeuralNet (tfp DenseLocalReparameterization stack)",
+  "n_layers": 4,
+  "obs_scale_softplus_range": [
+    0.07215518673646973,
+    0.07403680904341486
+  ],
+  "obs_scale_untransformed": "recorded for provenance; batch-position-indexed upstream, unused here",
+  "out_act": "sigmoid",
+  "published_scores": {
+    "train_r2": 0.8057045453458334,
+    "train_rmsd": 0.04596133016536478,
+    "validation_r2": 0.9471635746183775,
+    "validation_rmsd": 0.02617624918988548
+  },
+  "published_scores_protocol": "num_samples=10 averaged stochastic passes, scored in scaled target space (before back_transform)",
+  "softplus_eps": 1.1920928955078125e-07,
+  "source": "aspuru-guzik-group/olympus, shipped BayesNeuralNet emulator",
+  "target_transform": [
+    "identity"
+  ],
+  "task": "regression"
+}
